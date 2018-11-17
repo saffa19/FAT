@@ -41,7 +41,6 @@ void readdisk ( const char * filename )
 		fclose(dest) ;
 }
 
-
 /* the basic interface to the virtual disk
  * this moves memory around
  */
@@ -70,7 +69,6 @@ void writeblock ( diskblock_t * block, int block_address )
  *              - each block can hold (BLOCKSIZE / sizeof(fatentry_t)) fat entries
  */
 
-
 void format(char * disk_name){
 	diskblock_t block ;
 	direntry_t  rootDir ;
@@ -85,14 +83,25 @@ void format(char * disk_name){
 	}
 		
 	// use strcpy() to copy some text to it for test purposes
-	strcpy(diskblock_t, 'testing');
+	//strcpy(diskblock_t, 'testing') ;
 	
 	// write block 0 to virtual disk
-	
+	writeblock(&block, 0)
+	FAT[0] = ENDOFCHAIN ;
 
 	// prepare FAT table
+	numberOfFATBlocks = ()
+	numberOfFATBlocks = (int)(MAXBLOCKS+(FATENTRYCOUNT-1))/FATENTRYCOUNT;; //the number of blocks in the FAT
+	for (i = 1; i < numberOfFATBlocks; i++){
+		FAT[i] = i+1;
+	}
+	FAT[num_of_fat_blocks] = ENDOFCHAIN; //end of fat table
+	   FAT[num_of_fat_blocks+1] = ENDOFCHAIN; // root dir
+	   for(i = num_of_fat_blocks+2; i < MAXBLOCKS; i++){
+	     FAT[i] = UNUSED;
+	   }
 	// write FAT blocks to virtual disk
-	
+	writeblock(,0)
 
 	// prepare root directory
 	// write root directory block to virtual disk
