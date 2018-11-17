@@ -18,10 +18,10 @@ Include any header files required, in your shell.c (do NOT include any .c files!
 #include "filesys.h"
 
 void cgsD3_D1(){
-	format("CS3026 Operating Systems Assessment 2018");
-	writeDisk("virtualdiskD3_D1\0");
+	format("CS3026 Operating Systems Assessment 2018") ;
+	writedisk("virtualdiskD3_D1\0") ;
 }
 
-void main(){
-	cgsD3_D1();
+int main(){
+	cgsD3_D1() ;
 }
