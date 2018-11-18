@@ -105,11 +105,8 @@ void format(char * disk_name){
 		FAT[i] = UNUSED ;
 	}
 
-	// implement a function copyFAT()
 	copyFAT(FAT, fatblocksneeded) ;
 
-	// write FAT blocks to virtual disk
-	// prepare root directory
 	diskblock_t rootBlock ;
 	rootBlock.dir.isdir = 1 ;
 	rootBlock.dir.nextEntry = 0 ;
@@ -119,7 +116,28 @@ void format(char * disk_name){
 	writeblock(&rootBlock, rootDirIndex) ;
 }
 
+// in: filename, mode(r/w), MyFILE?
+myfopen(char name, char mode){
+	if (mode == 'w'){
 
+	}
+}
+
+// in: filename, chars, MyFILE?
+myfputc(){
+
+}
+
+// in: filename, MyFILE?
+myfgetc(){
+
+}
+
+
+// in: filename, MyFILE?
+myfclose(){
+
+}
 
 
 

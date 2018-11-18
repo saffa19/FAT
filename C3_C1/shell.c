@@ -29,6 +29,18 @@ Extend your test program shell.c with the following steps:
 void cgsC3_C1(){
 	format("CS3026 Operating Systems Assessment 2018") ;
 	writedisk("virtualdiskC3_C1\0") ;
+	
+	// create a file "testfile.txt" in you virtual disk
+	myfopen("testfile.txt", "w") ;
+
+	// write a text of size 4kb (4096 bytes) to the file
+	char string[] = "ABCDEFHIJKLMNOPQRSTUVWXYZ" ;
+	int i;
+	for (i = 0; i < 4*BLOCKSIZE; i++){
+		myfputc('ABCDEFHIJKLMNOPQRSTUVWXYZ', myFile);
+	}
+	myfclose(myFile);
+
 }
 
 int main(){
