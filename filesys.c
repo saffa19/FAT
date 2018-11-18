@@ -73,7 +73,7 @@ void copyFAT(fatentry_t * FAT, int fatblocksneeded){
 	unsigned int i, j, k = 0;
 	for (i = 1; i <= fatblocksneeded; i++){
 		for (j = 0; j < FATENTRYCOUNT; j++){
-			fatblock.fat[k] = FAT[k] ;
+			fatblock.fat[j] = FAT[k] ;
 			k++ ;
 		}
 	writeblock(&fatblock, i) ;
