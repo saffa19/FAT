@@ -68,44 +68,63 @@ void writeblock ( diskblock_t * block, int block_address )
  *                FAT
  *              - each block can hold (BLOCKSIZE / sizeof(fatentry_t)) fat entries
  */
+void copyFAT(fatentry_t * FAT, int fatblocksneeded){
+	diskblock_t fatblock ;
+	unsigned int i, j, k = 0;
+	for (i = 1; i <= fatblocksneeded; i++){
+		for (j = 0; j < FATENTRYCOUNT; j++){
+			fatblock.fat[k] = FAT[k] ;
+			k++ ;
+		}
+	writeblock(&fatblock, i) ;
+	}
+}
+
 
 void format(char * disk_name){
 	diskblock_t block ;
 	direntry_t  rootDir ;
 	int         pos             = 0 ;
 	int         fatentry        = 0 ;
-	int         fatblocksneeded =  (MAXBLOCKS / FATENTRYCOUNT ) ;
+	int         fatblocksneeded =  (MAXBLOCKS + (FATENTRYCOUNT - 1)) / FATENTRYCOUNT ;
 
 	// prepare block 0 : fill it with '\0'
-	int i = 1 ;
+	unsigned int i = 1 ;
 	for (int i = 0; i < BLOCKSIZE; i++){
 		block.data[i] = '\0' ;
 	}
-		
+	
 	// use strcpy() to copy some text to it for test purposes
-	//strcpy(diskblock_t, 'testing') ;
+	// I used memcpy because I was getting type errors with strcpy
+	memcpy(block.data, disk_name, strlen(disk_name)) ;
 	
 	// write block 0 to virtual disk
-	writeblock(&block, 0)
+	writeblock(&block, 0) ;
 	FAT[0] = ENDOFCHAIN ;
 
+	// printf("fatblocksneeded: %d\n",fatblocksneeded);
 	// prepare FAT table
-	numberOfFATBlocks = ()
-	numberOfFATBlocks = (int)(MAXBLOCKS+(FATENTRYCOUNT-1))/FATENTRYCOUNT;; //the number of blocks in the FAT
-	for (i = 1; i < numberOfFATBlocks; i++){
-		FAT[i] = i+1;
+	for (i = 1; i < fatblocksneeded; i++){
+		FAT[i] = i+1;	//setting FAT[1] = 2
 	}
-	FAT[num_of_fat_blocks] = ENDOFCHAIN; //end of fat table
-	   FAT[num_of_fat_blocks+1] = ENDOFCHAIN; // root dir
-	   for(i = num_of_fat_blocks+2; i < MAXBLOCKS; i++){
-	     FAT[i] = UNUSED;
-	   }
+	FAT[fatblocksneeded] = ENDOFCHAIN ; // end of blockchain for FAT table
+	FAT[fatblocksneeded + 1] = ENDOFCHAIN ; // root directory
+	for(i = fatblocksneeded + 2; i < MAXBLOCKS; i++){ // all other blocks are UNUSED
+		FAT[i] = UNUSED ;
+	}
+
+	// implement a function copyFAT()
+	copyFAT(FAT, fatblocksneeded) ;
+
 	// write FAT blocks to virtual disk
-	writeblock(,0)
-
 	// prepare root directory
+	diskblock_t rootBlock ;
+	rootBlock.dir.isdir = 1 ;
+	rootBlock.dir.nextEntry = 0 ;
+	rootDirIndex = fatblocksneeded + 1;
+	
 	// write root directory block to virtual disk
-
+	writeblock(&rootBlock, rootDirIndex) ;
 }
 
 
