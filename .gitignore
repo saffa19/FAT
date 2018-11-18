@@ -53,8 +53,7 @@ dkms.conf
 
 # My ignores
 .DS_Store
-.pdf
+*.pdf
 *~
-.pdf
 shell
 virtualdiskD3_D1
