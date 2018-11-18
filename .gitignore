@@ -55,3 +55,6 @@ dkms.conf
 .DS_Store
 .pdf
 *~
+.pdf
+shell
+virtualdiskD3_D1
