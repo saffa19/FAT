@@ -116,26 +116,26 @@ void format(char * disk_name){
 	writeblock(&rootBlock, rootDirIndex) ;
 }
 
-// in: filename, mode(r/w), MyFILE?
-myfopen(char name, char mode){
+// in: filename, mode(r/w)
+MyFILE *myfopen(const char *filename, const char *mode){	// from official C library function
 	if (mode == 'w'){
 
 	}
 }
 
-// in: filename, chars, MyFILE?
-myfputc(){
+// in: chars, open file
+int myfputc(int char, MyFILE *stream){		// from official C library function
 
 }
 
-// in: filename, MyFILE?
-myfgetc(){
+// in: open file
+int myfgetc(MyFILE *stream){		// from official C library function
 
 }
 
 
-// in: filename, MyFILE?
-myfclose(){
+// in: open file
+int myfclose(MyFILE *stream){		// from official C library function
 
 }
 
