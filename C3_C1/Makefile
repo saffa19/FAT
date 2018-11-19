@@ -1,4 +1,5 @@
 all:
 	gcc -o shell shell.c filesys.c
-	./shell>traceC3C1.txt
+	./shell
+	#hexdump -C virtualdiskD3_D1
 	hexdump -C virtualdiskC3_C1
