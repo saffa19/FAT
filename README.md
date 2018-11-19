@@ -11,9 +11,9 @@
 - change directory into one of the grade range folders
 - `cd D3_D1`
 - run the Makefile. Assuming everything works, you should see a few things appear in your terminal:
-1. gcc -o shell shell.c filesys.c
-2. ./shell
-3. hexdump -C virtualdiskD3_D1
+1. `gcc -o shell shell.c filesys.c`
+2. `./shell`
+3. `hexdump -C virtualdiskD3_D1`
 - these are all commands I've put in the Makefile
 - you should also see the hexdump -C of the virtualdisk produced by my code
 
