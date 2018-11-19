@@ -52,7 +52,7 @@ writedisk> virtualdisk[0] = CS3026 Operating Systems Assessment 2018
 This is the content of testfileC3_C1_copy.txt:
 BCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKL
 ```
-<center>...you get it, alphabet on loop for 4kb...</center>>
+<center>...you get it, alphabet on loop for 4kb...</center>
 ```
 #hexdump -C virtualdiskD3_D1
 hexdump -C virtualdiskC3_C1
