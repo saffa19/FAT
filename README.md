@@ -11,7 +11,8 @@
 - change directory into one of the grade range folders `cd D3_D1`
 - run the Makefile
 - assuming everything works, you should see a few things appear in your terminal
-`gcc -o shell shell.c filesys.c
+```
+gcc -o shell shell.c filesys.c
 ./shell
 writedisk> virtualdisk[0] = CS3026 Operating Systems Assessment 2018
 hexdump -C virtualdiskD3_D1
@@ -33,7 +34,7 @@ hexdump -C virtualdiskD3_D1
 00000e40  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
 *
 00100000
-`
+```
 
 ### Changing some things I probably shouldn't:
 
