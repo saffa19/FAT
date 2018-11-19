@@ -111,6 +111,9 @@ void myfputc(int b, MyFILE* stream) ;
 int myfgetc(MyFILE* stream) ;
 void myfclose(MyFILE* file) ;
 
+//CGS B3_B1
+int mymkdir ( const char * path ) ;
+char ** mylistdir (const char * path) ;
 #endif
 
 /*

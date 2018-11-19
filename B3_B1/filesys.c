@@ -291,6 +291,7 @@ void myfputc(int b, MyFILE *stream){		// from official C library function
 
 // in: an open file
 int myfgetc(MyFILE *stream){		// from official C library function
+	// checking for stream->mode wasn't working :(
 	/*
 	if (!(strcmp(stream -> mode, "r") == 0)){
 		// can't read chars if the file isn't opened in read mode
@@ -304,7 +305,6 @@ int myfgetc(MyFILE *stream){		// from official C library function
 	if (stream -> pos == BLOCKSIZE){
 		stream -> pos = 0 ;
 		stream -> blockno = FAT[stream -> blockno] ;
-		return gotChar ;
 
 	} else {	// buffer is current blockno in virtualDisk
 
@@ -312,14 +312,43 @@ int myfgetc(MyFILE *stream){		// from official C library function
 		gotChar = stream -> buffer.data[stream->pos] ;
 		// next char
 		stream -> pos ++ ;
-		return gotChar ;
 	}
+	return gotChar ;
 }
 
 // in: an open file
 void myfclose(MyFILE *stream){		// from official C library function
 	free(stream) ;		// unshackle the memory
 }
+
+
+int mymkdir(const char * path){
+	// creates a new directory
+		// Use strtok_r() from the C standard library to tokenize a path string
+	
+	char str[strlen(path)+1];
+	
+	strcpy(str,path);
+	
+	char* token; 
+    char* rest = str; 
+	
+	while ((token = strtok_r(rest, "/", &rest))){
+		printf("%s\n", token); 
+	}
+	return 0 ;
+}
+
+
+char ** mylistdir(const char * path){
+	// lists the content of a directory
+	return 0;
+}
+
+
+
+
+
 
 //use this for testing
 void printBlock ( int blockIndex )
