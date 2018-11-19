@@ -53,6 +53,7 @@ This is the content of testfileC3_C1_copy.txt:
 BCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKL
 ```
 <center>...you get it, alphabet on loop for 4kb...</center>
+
 ```
 #hexdump -C virtualdiskD3_D1
 hexdump -C virtualdiskC3_C1
@@ -91,6 +92,7 @@ hexdump -C virtualdiskC3_C1
 000010c0  4b 4c 4d 4e 4f 50 51 52  53 54 55 56 57 58 59 5a  |KLMNOPQRSTUVWXYZ|
 ```
 <center>...some time later...</center>
+
 ```
 00001f50  55 56 57 58 59 5a 41 42  43 44 45 46 47 48 49 4a  |UVWXYZABCDEFGHIJ|
 00001f60  4b 4c 4d 4e 4f 50 51 52  53 54 55 56 57 58 59 5a  |KLMNOPQRSTUVWXYZ|
