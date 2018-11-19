@@ -15,7 +15,7 @@
 $ make
 gcc -o shell shell.c filesys.c
 ./shell
-writedisk> virtualdisk[0] = CS3026 Operating Systems Assessment 2018
+
 hexdump -C virtualdiskD3_D1
 00000000  43 53 33 30 32 36 20 4f  70 65 72 61 74 69 6e 67  |CS3026 Operating|
 00000010  20 53 79 73 74 65 6d 73  20 41 73 73 65 73 73 6d  | Systems Assessm|
@@ -46,9 +46,7 @@ hexdump -C virtualdiskD3_D1
 $ make
 gcc -o shell shell.c filesys.c
 ./shell
-writedisk> virtualdisk[0] = CS3026 Operating Systems Assessment 2018
-writedisk> virtualdisk[0] = CS3026 Operating Systems Assessment 2018
-writedisk> virtualdisk[0] = CS3026 Operating Systems Assessment 2018
+
 This is the content of testfileC3_C1_copy.txt:
 BCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOP
 QRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDE
