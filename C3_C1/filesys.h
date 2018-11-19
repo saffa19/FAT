@@ -93,6 +93,7 @@ extern diskblock_t virtualDisk [ MAXBLOCKS ] ;
 
 typedef struct filedescriptor {
 	int         pos ;           // byte within a block
+	int 		filelength ;
 	char        mode[3] ;
 	Byte        writing ;
 	fatentry_t  blockno ;
@@ -100,10 +101,15 @@ typedef struct filedescriptor {
 } MyFILE ;
 
 
-
+//CGS D3_D1
 void format() ;
 void writedisk(const char * filename) ;
 
+//CGS C3_C1
+MyFILE* myfopen(const char* filename, const char* mode) ;
+void myfputc(int b, MyFILE* stream) ;
+int myfgetc(MyFILE* stream) ;
+void myfclose(MyFILE* file) ;
 
 #endif
 

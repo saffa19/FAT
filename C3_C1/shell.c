@@ -26,49 +26,48 @@ Extend your test program shell.c with the following steps:
 #include <stdlib.h>
 #include "filesys.h"
 
-/* NOT SURE IF I NEED THESE SINCE THEY'RE ALREADY DECLARED IN FILESYS.C??
-MyFILE * myfopen(char * name, const char mode);
-int myfputc(char b, MyFILE * stream);
-char myfgetc(MyFILE * stream);
-int myfclose(MyFILE *file);
-*/
-
 void cgsC3_C1(){
 	format("CS3026 Operating Systems Assessment 2018") ;
 	writedisk("virtualdiskD3_D1\0") ;
 	
 	// create a fake file "testfile.txt" in your virtual disk
 	MyFILE * fakeFile = myfopen("testfile.txt", "w") ;
-
-	// write a text of size 4kb (4096 bytes) to the fake file
-	char string[] = "ABCDEFHIJKLMNOPQRSTUVWXYZ" ;
-	int i;
+	writedisk("virtualdiskC3_C1\0") ;
+	
+	// write body of text (4096 bytes) to the fake file
+	char * string = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" ;
+	int i, j;
 	for (i = 0; i < 4*BLOCKSIZE; i++){
-		myfputc(string, fakeFile) ;
+		myfputc(string[j], fakeFile) ;
+		j++ ;
+		if (j == 26) j = 0;
 	}
+	myfputc(EOF, fakeFile) ;
 	
 	// close the fake file
-	MyFILE *myfclose(fakeFile) ;
+	myfclose(fakeFile) ;
 
 	// write the complete virtual disk to a file virtualdiskC3_C1
 	writedisk("virtualdiskC3_C1\0") ;
-	
-	// open fake file testfile.txt
-	MyFILE *myfopen("testfile.txt", "r") ;
 
-	// open real file testfileC3_C1_copy.
-	// FILE *fopen(const char *filename, const char *mode)
-	FILE *fopen("testfileC3_C1_copy.txt", "w") ;
+	// open the file on the virtual disk
+	myfopen("fakeFile", "r") ;
 
-	// test myfgetc()
-	while(TRUE){
-		char characterInFakeFile ;
-		characterInFakeFile = myfgetc(fakeFile) ;		//references the fake file
-		if (characterInFakeFile == EOF ){
-			break ;
+	// open a file to be written to local hard disk
+	FILE * realFile;
+	char lastcharacter ;
+	realFile = fopen("testfileC3_C1_copy.txt", "w");
+
+	// print out fakeFile's content to the screen and save it to testfileC3_C1_copy.txt
+	printf("This is the content of testfileC3_C1_copy.txt:\n") ;
+	while (lastcharacter != EOF){
+		lastcharacter = myfgetc(fakeFile) ;
+		if (lastcharacter != EOF){
+			printf("%c", lastcharacter);
+			fprintf(realFile, "%c",lastcharacter);
 		}
-		printf("%c", character) ;
 	}
+	printf("\n\n") ;
 }
 
 int main(){
