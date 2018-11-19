@@ -68,15 +68,17 @@ void writeblock ( diskblock_t * block, int block_address )
  *                FAT
  *              - each block can hold (BLOCKSIZE / sizeof(fatentry_t)) fat entries
  */
-void copyFAT(fatentry_t * FAT, int fatblocksneeded){
-	diskblock_t fatblock ;
-	unsigned int i, j, k = 0;
-	for (i = 1; i <= fatblocksneeded; i++){
-		for (j = 0; j < FATENTRYCOUNT; j++){
-			fatblock.fat[j] = FAT[k] ;
-			k++ ;
+void copyFAT(){
+	int fatblocksneeded = (MAXBLOCKS / FATENTRYCOUNT) ;
+	diskblock_t block ;
+	int index = 0 ;
+	// 2: fat blocks needed
+	for (int i = 0; i < fatblocksneeded; i++){
+		// 512: number of fat entries in one block
+		for (int j = 0; j < FATENTRYCOUNT; j++){
+			block.fat[j] = FAT[index++] ;
 		}
-	writeblock(&fatblock, i) ;
+	writeblock(&block, i + 1) ;
 	}
 }
 
@@ -86,45 +88,43 @@ void format(char * disk_name){
 	direntry_t  rootDir ;
 	int         pos             = 0 ;
 	int         fatentry        = 0 ;
-	int         fatblocksneeded =  (MAXBLOCKS + (FATENTRYCOUNT - 1)) / FATENTRYCOUNT ;
+	int         fatblocksneeded =  (MAXBLOCKS / FATENTRYCOUNT) ;
 
-	// prepare block 0 : fill it with '\0'
-	unsigned int i = 1 ;
-	for (int i = 0; i < BLOCKSIZE; i++){
-		block.data[i] = '\0' ;
-	}
-	
-	// use strcpy() to copy some text to it for test purposes
-	// I used memcpy because I was getting type errors with strcpy
-	memcpy(block.data, disk_name, strlen(disk_name)) ;
-	
-	// write block 0 to virtual disk
+	// prepare block 0
+	for (int i = 0; i < BLOCKSIZE; i++) block.data[i] = '\0' ;
+
+	memcpy( block.data,	disk_name, strlen(disk_name)) ;
 	writeblock(&block, 0) ;
+
+	// all other blocks are UNUSED
+	for (int i = 0 ; i < MAXBLOCKS; i++) FAT[i] = UNUSED ;
+
+	// block 0, fatblock, rootblock and end of chain
 	FAT[0] = ENDOFCHAIN ;
+	FAT[1] = 2 ;
+	FAT[2] = ENDOFCHAIN ;
+	FAT[3] = ENDOFCHAIN ;
 
-	// printf("fatblocksneeded: %d\n",fatblocksneeded);
-	// prepare FAT table
-	for (i = 1; i < fatblocksneeded; i++){
-		FAT[i] = i+1;	//setting FAT[1] = 2
-	}
-	FAT[fatblocksneeded] = ENDOFCHAIN ; // end of blockchain for FAT table
-	FAT[fatblocksneeded + 1] = ENDOFCHAIN ; // root directory
-	for(i = fatblocksneeded + 2; i < MAXBLOCKS; i++){ // all other blocks are UNUSED
-		FAT[i] = UNUSED ;
-	}
+	// implement a function copyFAT (also saves the FAT)
+	copyFAT() ;
 
-	// implement a function copyFAT()
-	copyFAT(FAT, fatblocksneeded) ;
-
-	// write FAT blocks to virtual disk
-	// prepare root directory
-	diskblock_t rootBlock ;
-	rootBlock.dir.isdir = 1 ;
-	rootBlock.dir.nextEntry = 0 ;
-	rootDirIndex = fatblocksneeded + 1;
+	// prepare root block
+	// clearing block data for use 
+	for (int i = 0; i < BLOCKSIZE; i++) block.data[i] = '\0' ;
+	  
+	// set directory entries to empty 
+	for (int i = 0; i < DIRENTRYCOUNT; i++) block.dir.entrylist[i].unused = TRUE ;
 	
-	// write root directory block to virtual disk
-	writeblock(&rootBlock, rootDirIndex) ;
+	// this is a directory block
+	block.dir.isdir = 1 ;
+
+	// first element in the entrylist
+	block.dir.nextEntry = 0 ;
+	rootDirIndex = fatblocksneeded + 1 ;
+	
+	// write root block to disk
+	writeblock(&block, fatblocksneeded + 1) ;
+	currentDirIndex = rootDirIndex ;
 }
 
 
