@@ -321,11 +321,23 @@ void myfclose(MyFILE *stream){		// from official C library function
 	free(stream) ;		// unshackle the memory
 }
 
-
+// creates a new directory
 int mymkdir(const char * path){
-	// creates a new directory
-		// Use strtok_r() from the C standard library to tokenize a path string
-	
+	// IDEA
+		// check if dirs already exist with the path's parent dir names
+		// if they do, create dir inside that dir
+			// need a way of referencing parent/child dirs
+		// get the dir name that we'll write to the block as last element in the path (tokenise)
+		// get next empty dir entry in entrylist[] with nextUnusedDirEntry()
+		// get next unused block with nextUnusedBlock()
+		// writeblock(our dir, index where we'll store the dir)
+
+	// probably going to need functions
+		// get last element of path
+		// get everything except last element of path
+
+	// Use strtok_r() from the C standard library to tokenize a path string
+	/*
 	char str[strlen(path)+1];
 	
 	strcpy(str,path);
@@ -335,20 +347,22 @@ int mymkdir(const char * path){
 	
 	while ((token = strtok_r(rest, "/", &rest))){
 		printf("%s\n", token); 
-	}
+	}*/
+
 	return 0 ;
 }
 
 
 char ** mylistdir(const char * path){
 	// lists the content of a directory
+	
+
+
+
+
+
 	return 0;
 }
-
-
-
-
-
 
 //use this for testing
 void printBlock ( int blockIndex )
