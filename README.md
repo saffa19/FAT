@@ -41,8 +41,7 @@ hexdump -C virtualdiskD3_D1
 - Block 2: addresses 0x800 to 0xbff (2048-3071). Occupied by the FAT blockchain.
 - Block 3: addresses 0xc00 to 0xfff (3072-4095). The root directory.
 
-##### so where is the FAT?
-You can see the FAT at 0x400:
+#### You can see the FAT at 0x400:
 - the first `00 00` is the value in FAT entry for block 0 (FAT[0]), set to ENDOFCHAIN
 - the next `02 00` is the value in FAT entry for block 1 (FAT[1]), set to 2 (this is the index of `FAT[2]`)
 - the next `00 00` is the value in FAT entry for block 2 (FAT[2]), set to ENDOFCHAIN (the end of the
@@ -51,7 +50,7 @@ block chain for the FAT table)
 directory)
 - the rest remains UNUSED, which is -1 or 0xff
 
-You can see the block for the root directory at 0xc00:
+#### You can see the block for the root directory at 0xc00:
 - the first `01 00` is the value stored in "isDir" of dirblock_t.
 - the rest of the block is initialized to '\0'
 - the `00 01`'s scattered in the rest of the root directory addresses are where I've set the `dir.entrylist[i].unused = TRUE`
