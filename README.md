@@ -36,7 +36,7 @@ hexdump -C virtualdiskD3_D1
 *
 00100000
 ```
-- Block 0: addresses 0x0 to 0x3ff (1023). Block 0 is the sacred block. After initialising, it doesn't get changed.
+- Block 0: addresses 0x000 to 0x3ff (0000-1023). Block 0 is the sacred block.
 - Block 1: addresses 0x400 to 0x7ff (1024-2047). Occupied by the FAT blockchain. 
 - Block 2: addresses 0x800 to 0xbff (2048-3071). Occupied by the FAT blockchain.
 - Block 3: addresses 0xc00 to 0xfff (3072-4095). The root directory.
@@ -52,7 +52,7 @@ directory)
 #### You can see the block for the root directory at 0xc00:
 - the first `01 00` is the value stored in "isDir" of dirblock_t `block.dir.isdir = 1`
 - the rest of the block is initialized to '\0'
-- the `00 01`'s scattered in the rest of the root directory addresses are where I've set the `dir.entrylist[i].unused = TRUE`
+- the `00 01`'s scattered in the rest of the root directory are where I've set the `dir.entrylist[i].unused = TRUE`
 
 ### C3_C1
 
