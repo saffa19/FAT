@@ -6,7 +6,7 @@
 - language: C99
 - compiler: gcc
 
-### How to run D3_D1
+### D3_D1
 
 - change directory into one of the grade range folders `cd D3_D1`
 - run the Makefile
@@ -36,8 +36,27 @@ hexdump -C virtualdiskD3_D1
 *
 00100000
 ```
+- Block 0: addresses 0x0 to 0x3ff (1023). Block 0 is the sacred block. After initialising, it doesn't get changed.
+- Block 1: addresses 0x400 to 0x7ff (1024-2047). Occupied by the FAT blockchain. 
+- Block 2: addresses 0x800 to 0xbff (2048-3071). Occupied by the FAT blockchain.
+- Block 3: addresses 0xc00 to 0xfff (3072-4095). The root directory.
 
-### How to run C3_C1
+##### so where is the FAT?
+You can see the FAT at 0x400:
+- the first `00 00` is the value in FAT entry for block 0 (FAT[0]), set to ENDOFCHAIN
+- the next `02 00` is the value in FAT entry for block 1 (FAT[1]), set to 2 (this is the index of `FAT[2]`)
+- the next `00 00` is the value in FAT entry for block 2 (FAT[2]), set to ENDOFCHAIN (the end of the
+block chain for the FAT table)
+- the next `00 00` is the value in FAT entry for block 3 (FAT[3]), set to ENDOFCHAIN (the root
+directory)
+- the rest remains UNUSED, which is -1 or 0xff
+
+You can see the block for the root directory at 0xc00:
+- the first `01 00` is the value stored in "isDir" of dirblock_t.
+- the rest of the block is initialized to '\0'
+- the `00 01`'s scattered in the rest of the root directory addresses are where I've set the `dir.entrylist[i].unused = TRUE`
+
+### C3_C1
 
 - change directory into one of the grade range folders `cd C3_C1`
 - run the Makefile
