@@ -210,6 +210,7 @@ hexdump -C virtualdiskB3_B1_a
 00001cc0  4b 4c 4d 4e 4f 50 51 52  53 54 55 56 57 58 59 5a  |KLMNOPQRSTUVWXYZ|
 ```
 <p align="center">...a few lines later...</p>
+
 ```
 00002b70  41 42 43 44 45 46 47 48  49 4a 4b 4c 4d 4e 4f 50  |ABCDEFGHIJKLMNOP|
 00002b80  51 52 53 54 55 56 57 58  59 5a 41 42 43 44 45 46  |QRSTUVWXYZABCDEF|
@@ -225,7 +226,6 @@ hexdump -C virtualdiskB3_B1_a
 *
 00100000
 ```
-
 ### Changing some things I probably shouldn't:
 
 - commented out line 29 in filesys.h because it was messing with C's built in definition of EOF 
