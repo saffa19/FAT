@@ -1,6 +1,6 @@
 ## Implementing a FAT in C
 
-### Prerequisites
+### Dev environment
 
 - env: MAC OS 10.13.x
 - language: C99
