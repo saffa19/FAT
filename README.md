@@ -141,9 +141,9 @@ hexdump -C virtualdiskC3_C1
 directory)
 - the rest remains UNUSED, which is -1 or 0xff
 
-### C3_C1
+### B3_B1
 
-- change directory into one of the grade range folders `cd C3_C1`
+- change directory into one of the grade range folders `cd B3_B1`
 - run the Makefile
 - assuming everything works, you should see a few things appear in your terminal
 ```
