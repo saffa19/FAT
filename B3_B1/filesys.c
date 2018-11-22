@@ -23,7 +23,7 @@ fatentry_t   currentDirIndex         = 0 ;
 
 void writedisk ( const char * filename )
 {
-	printf ( "writedisk> virtualdisk[0] = %s\n", virtualDisk[0].data ) ;
+	//printf ( "\nwritedisk> virtualdisk[0] = %s\n", virtualDisk[0].data ) ;
 	FILE * dest = fopen( filename, "w" ) ;
 	if ( fwrite ( virtualDisk, sizeof(virtualDisk), 1, dest ) < 0 )
 		fprintf ( stderr, "write virtual disk to disk failed\n" ) ;
@@ -60,10 +60,11 @@ void readblock( diskblock_t * block, int block_address ){
 }
 
 // finds the index of the next entry in entrylist[] that has unused == TRUE
-int nextUnusedDirentry(diskblock_t block){
+int nextUnusedDirEntry(dirblock_t block){
 	for (int i = 0; i < DIRENTRYCOUNT; i++){
-		if (block.dir.entrylist[i].unused){
+		if (block.entrylist[i].unused){
 			return i ;
+			printf(" \nfree dir entry found at pos %i \n", i);
 		}
 	}
 	// no more space in entrylist
@@ -86,17 +87,19 @@ int nextUnusedBlock(){
 	return -1 ;
 }
 
+
 // checks to see if a file with same filename exists in diskblock
-int fileExists(diskblock_t block, const char *filename){
+int fileExists(dirblock_t block, const char *filename){
 	int pos ;
 	for (int pos = 0; pos < DIRENTRYCOUNT; pos++){
-		if (block.dir.entrylist[pos].unused && strcmp(block.dir.entrylist[pos].name, filename) == 0){
+		if (!(block.entrylist[pos].unused) && strcmp(block.entrylist[pos].name, filename) == 0 && block.entrylist[pos].isdir == 0){
 			return pos;
 		}
 	}
 	// file with that name doesn't exist in dirblock
 	return -1 ;
 }
+
 
 /* read and write FAT
  * 
@@ -161,26 +164,25 @@ void format(char * disk_name){
 	// set directory entries to empty 
 	for (int i = 0; i < DIRENTRYCOUNT; i++) block.dir.entrylist[i].unused = TRUE ;
 	
-	// this is a directory block
+	// directory block
 	block.dir.isdir = 1 ;
 
 	// first element in the entrylist
 	block.dir.nextEntry = 0 ;
-	rootDirIndex = fatblocksneeded + 1 ;
 	
 	// write root block to disk
 	writeblock(&block, fatblocksneeded + 1) ;
+	rootDirIndex = fatblocksneeded + 1 ;
 	currentDirIndex = rootDirIndex ;
 }
-	
-
 
 // in: filename, mode(r/w)
 MyFILE * myfopen(const char *filename, const char * mode){	// from official C library function
 
 	// should probably check if there's a fakefile with the same name before writing anything
 
-	diskblock_t blockToBeWritten ;
+	dirblock_t blockToBeWritten ;
+	diskblock_t dirblock ;
 	int pos ;
 
 	// allocate memory
@@ -188,41 +190,40 @@ MyFILE * myfopen(const char *filename, const char * mode){	// from official C li
 	memcpy(fakefile -> mode, mode, strlen(mode)) ;
 	
 	// the direntry block
-	blockToBeWritten = virtualDisk[3] ;
+	dirblock = virtualDisk[rootDirIndex] ;
 	
 	// check if fakefile is already in dirblock
-	pos = fileExists(blockToBeWritten, filename) ;
+	pos = fileExists(dirblock.dir, filename) ;
 
 	if (pos != -1){
 		// starts blockchain for fakeFile, populates first block with current info
-		fakefile -> blockno = blockToBeWritten.dir.entrylist[pos].firstblock;
+		fakefile -> blockno = dirblock.dir.entrylist[pos].firstblock;
 	
 		// file always starts at the beginning of the block
 		fakefile -> pos = 0 ;
 
 	} else {
-	
-		// looks for an empty dir in dirblock entrylist[]
-		int i = nextUnusedDirentry(blockToBeWritten) ;
-
+		
 		// looks for a free fat entry
 		pos = nextUnusedBlock() ;
+		// looks for an empty dir in dirblock entrylist[]
+		int i = nextUnusedDirEntry(dirblock.dir) ;
 				
 		FAT[pos] = ENDOFCHAIN ;
 		
 		// set position of fakefile blockno and entrylist
 		fakefile -> blockno = pos ;
-		blockToBeWritten.dir.entrylist[i].firstblock = pos ;
+		dirblock.dir.entrylist[i].firstblock = pos ;
 		
 		// write to FAT
 		copyFAT() ;
 	
 		// direntry.name is the fakeFile name and fakeFile now occupies this direntry
-		strcpy(blockToBeWritten.dir.entrylist[i].name, filename) ;
-		blockToBeWritten.dir.entrylist[i].unused = FALSE ;
+		strcpy(dirblock.dir.entrylist[i].name, filename) ;
+		dirblock.dir.entrylist[i].unused = FALSE ;
 		
 		// write to dirblock
-		writeblock(&blockToBeWritten, 3) ;
+		writeblock(&dirblock, 3) ;
 	}
 	return fakefile ;
 }
@@ -321,47 +322,60 @@ void myfclose(MyFILE *stream){		// from official C library function
 	free(stream) ;		// unshackle the memory
 }
 
-// creates a new directory
-int mymkdir(const char * path){
-	// IDEA
-		// check if dirs already exist with the path's parent dir names
-		// if they do, create dir inside that dir
-			// need a way of referencing parent/child dirs
-		// get the dir name that we'll write to the block as last element in the path (tokenise)
-		// get next empty dir entry in entrylist[] with nextUnusedDirEntry()
-		// get next unused block with nextUnusedBlock()
-		// writeblock(our dir, index where we'll store the dir)
+// set all entries in the entrylist for the current block to unused
+void clearBlockEntries(int index, diskblock_t * block){
+	if (index > rootDirIndex){
+		for (int i = 0; i < DIRENTRYCOUNT; i++){
+			block->dir.entrylist[i].unused = TRUE ;
+		}
+	}
+}
 
-	// probably going to need functions
-		// get last element of path
-		// get everything except last element of path
+int mymkdir(char* path){
+	// a very naïve implementation
+	char str[strlen(path)+1] ;
+	strcpy(str,path) ;
 
-	// Use strtok_r() from the C standard library to tokenize a path string
-	/*
-	char str[strlen(path)+1];
-	
-	strcpy(str,path);
-	
-	char* token; 
-    char* rest = str; 
-	
-	while ((token = strtok_r(rest, "/", &rest))){
-		printf("%s\n", token); 
-	}*/
+	char *token ;
+	char *rest = str ;
+	int index = rootDirIndex ;
 
+
+	while ((token = strtok_r(rest, "/" , &rest))){
+		int nextBlock ;
+		int entry ;
+
+		diskblock_t block = virtualDisk[index] ;
+		
+		clearBlockEntries(index, &block) ;
+		entry = nextUnusedDirEntry(block.dir) ;
+		nextBlock = nextUnusedBlock() ;
+
+		//set filename to block
+		strcpy(block.dir.entrylist[entry].name, token) ;	
+
+		block.dir.nextEntry = 0 ;
+		block.dir.isdir = 1 ;	
+		block.dir.entrylist[entry].unused = FALSE ;
+		block.dir.entrylist[entry].firstblock = nextBlock ;
+		
+		FAT[nextBlock] = ENDOFCHAIN ;
+
+		copyFAT() ;
+		writeblock(&block,index) ;
+
+		index = nextBlock ;
+	}
 	return 0 ;
 }
 
-
-char ** mylistdir(const char * path){
-	// lists the content of a directory
-	
-
-
-
-
-
-	return 0;
+// finds a directory according to name: returns the index of the dir
+int findDir(dirblock_t block, char* name){
+   for (int i = 0; i < block.nextEntry; i++) {
+      if (strcmp(name, block.entrylist[i].name) == 0 && block.entrylist[i].isdir == 1) 
+         return i;
+   }
+   return -1;
 }
 
 //use this for testing
