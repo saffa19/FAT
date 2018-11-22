@@ -73,7 +73,7 @@ void copyFAT(){
 	diskblock_t block ;
 	int index = 0 ;
 	// 2: fat blocks needed
-	for (int i = 0; i < fatblocksneeded; i++){
+	for (int i = 1; i < fatblocksneeded; i++){
 		// 512: number of fat entries in one block
 		for (int j = 0; j < FATENTRYCOUNT; j++){
 			block.fat[j] = FAT[index++] ;
