@@ -342,14 +342,14 @@ int mymkdir(char* path){
 
 
 	while ((token = strtok_r(rest, "/" , &rest))){
-		int nextBlock ;
-		int entry ;
+		//int nextBlock ;
+		//int entry ;
 
 		diskblock_t block = virtualDisk[index] ;
 		
 		clearBlockEntries(index, &block) ;
-		entry = nextUnusedDirEntry(block.dir) ;
-		nextBlock = nextUnusedBlock() ;
+		int entry = nextUnusedDirEntry(block.dir) ;
+		int nextBlock = nextUnusedBlock() ;
 
 		//set filename to block
 		strcpy(block.dir.entrylist[entry].name, token) ;	
