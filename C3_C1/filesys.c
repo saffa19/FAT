@@ -119,7 +119,7 @@ void copyFAT(){
 	diskblock_t block ;
 	int index = 0 ;
 	// 2: fat blocks needed
-	for (int i = 0; i < fatblocksneeded; i++){
+	for (int i = 1; i < fatblocksneeded; i++){
 		// 512: number of fat entries in one block
 		for (int j = 0; j < FATENTRYCOUNT; j++){
 			block.fat[j] = FAT[index++] ;
@@ -161,7 +161,7 @@ void format(char * disk_name){
 	// set directory entries to empty 
 	for (int i = 0; i < DIRENTRYCOUNT; i++) block.dir.entrylist[i].unused = TRUE ;
 	
-	// this is a directory block
+	// this is a directory block (visible in hexdump at 0c00)
 	block.dir.isdir = 1 ;
 
 	// first element in the entrylist
@@ -318,6 +318,7 @@ int myfgetc(MyFILE *stream){		// from official C library function
 
 // in: an open file
 void myfclose(MyFILE *stream){		// from official C library function
+	// should also write the filelength to the directory entry for this file
 	free(stream) ;		// unshackle the memory
 }
 
