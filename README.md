@@ -225,6 +225,7 @@ hexdump -C virtualdiskB3_B1_a
 *
 00100000
 ```
+
 ### Changing some things I probably shouldn't:
 
 - commented out line 29 in filesys.h because it was messing with C's built in definition of EOF 
