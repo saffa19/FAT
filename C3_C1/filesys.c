@@ -229,11 +229,7 @@ MyFILE * myfopen(const char *filename, const char * mode){	// from official C li
 
 // in: chars, an open file
 void myfputc(int b, MyFILE *stream){		// from official C library function
-	// writes byte to file
-	// buffer has size BLOCKSIZE
-	// if the pos is greater than (or equal to) the buffer size: we'll have to save the buffer
-	// to block, empty the buffer and set pos = 0 before continuing
-	
+
 	if (strcmp(stream -> mode, "w") != 0){
 		// can't put chars if the file isn't opened in write mode
 		return ;
