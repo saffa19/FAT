@@ -28,6 +28,8 @@
 #define ENDOFCHAIN     0
 //#define EOF           -1
 
+#define ENDOFPATHARRAY "0"
+#define ROOTBLOCKDIRENTRY -1
 
 typedef unsigned char Byte ;
 
@@ -63,7 +65,7 @@ typedef struct direntry {
 typedef struct dirblock {
 	int isdir ;
 	int nextEntry ;
-	direntry_t entrylist [ DIRENTRYCOUNT ] ; // the first two integer are marker and endpos
+	direntry_t entrylist [ DIRENTRYCOUNT ] ;	// the first two integer are marker and endpos
 } dirblock_t ;
 
 
@@ -93,9 +95,9 @@ extern diskblock_t virtualDisk [ MAXBLOCKS ] ;
 
 typedef struct filedescriptor {
 	int         pos ;           // byte within a block
-	int 		filelength ;
+	int 		filelength ;	// added by me: keeping record of filelength
 	char        mode[3] ;
-	Byte        writing ;
+	Byte        writing ;	// used if you want to lock?
 	fatentry_t  blockno ;
 	diskblock_t buffer ;
 } MyFILE ;
@@ -112,8 +114,9 @@ int myfgetc(MyFILE* stream) ;
 void myfclose(MyFILE* file) ;
 
 //CGS B3_B1
-int mymkdir ( const char * path ) ;
-char ** mylistdir (const char * path) ;
+int mymkdir ( char * path ) ;
+char ** mylistdir ( char * path) ;
+void printDirectories() ;
 #endif
 
 /*
