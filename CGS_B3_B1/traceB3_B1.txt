@@ -1,0 +1,31 @@
+Found unused block: 5
+Found a free dir entry at pos 0 
+Found unused block: 6
+Found a free dir entry at pos 0 
+Found unused block: 7
+Found a free dir entry at pos 0 
+
+myfopen > testfile.txt
+Found unused block: 8
+myfopen nextUnusedBlock: 8
+Found a free dir entry at pos 0 
+
+myfputc > putting chars in buffer
+Found unused block: 9
+myfputc fatIndex: 8
+myfputc i: 9
+
+myfputc > putting chars in buffer
+Found unused block: 10
+myfputc fatIndex: 9
+myfputc i: 10
+
+myfputc > putting chars in buffer
+Found unused block: 11
+myfputc fatIndex: 10
+myfputc i: 11
+
+myfputc > putting chars in buffer
+Found unused block: 12
+myfputc fatIndex: 11
+myfputc i: 12
